@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="RecipeApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:RecipeApp"
+	x:Name="shell"
+    Shell.FlyoutBehavior="Disabled"
+	BindingContext="{x:Reference shell}"
+	BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryDark}, Dark={StaticResource Primary}}"
+    Title="Recipes">
+
+	<Shell.FlyoutHeaderTemplate>
+		<DataTemplate>
+			<Grid
+				BackgroundColor="Navy"
+				HeightRequest="100">
+				<Label
+					Text="Recipes App"
+					TextColor="White"
+					FontAttributes="Bold"
+					HorizontalTextAlignment="Start"
+					VerticalTextAlignment="Center"/>
+			</Grid>
+		</DataTemplate>
+	</Shell.FlyoutHeaderTemplate>
+
+	<FlyoutItem
+		FlyoutItemIsVisible="False"
+		Title="Loading"
+		Route="LoadingPage">
+		<ShellContent ContentTemplate="{DataTemplate local:Views.LoadingView}"/>
+	</FlyoutItem>
+
+	<FlyoutItem
+		FlyoutItemIsVisible="False"
+		Title="Login"
+		Route="LoginPage">
+		<ShellContent ContentTemplate="{DataTemplate local:Views.LoginView}"/>
+	</FlyoutItem>
+
+	<ShellContent
+		Shell.NavBarIsVisible="True"
+        Title="Recipes"
+        ContentTemplate="{DataTemplate local:Views.RecipeListView}"
+        Route="MainPage" />
+
+</Shell>

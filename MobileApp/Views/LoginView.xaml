@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Views.LoginView"
+			 xmlns:viewmodels="clr-namespace:RecipeApp.ViewModels"
+			 x:DataType="viewmodels:LoginViewModel"
+			 Shell.NavBarIsVisible="False"
+			 Shell.FlyoutBehavior="Disabled"
+             Title="LoginView">
+    <Grid
+		RowDefinitions="70,200,300,*"
+		RowSpacing="5">
+		<Label
+			Grid.Row="0"
+			Padding="10"
+			Margin="10"
+			FontSize="Large"
+			FontAttributes="Bold"
+			HorizontalTextAlignment="Center"
+			VerticalTextAlignment="Center"
+			Text="{Binding LocalizationManager[Registration], Mode=OneWay}"/>
+		<VerticalStackLayout
+			Grid.Row="1">
+			<Label
+				Padding="5"
+				Margin="5"
+				Text="{Binding LocalizationManager[EmailAddress], Mode=OneWay}"
+				HorizontalOptions="Start" />
+			<Entry
+				Margin="5"
+				Placeholder="test@test.com"
+				Text="{Binding Email, Mode=OneWayToSource}"/>
+			<Button
+				Padding="10"
+				Margin="10"
+				Text="{Binding LocalizationManager[SubmitEmail], Mode=OneWay}"
+				Command="{Binding GetEmailCodeCommand}"
+				CommandParameter="{Binding Email}"/>
+		</VerticalStackLayout>
+		<VerticalStackLayout
+			Grid.Row="2">
+			<Label
+				Padding="5"
+				Margin="5"
+				Text="{Binding LocalizationManager[CodeLabel], Mode=OneWay}"/>
+			<Entry
+				Margin="5"
+				Placeholder="000000"
+				Text="{Binding Code, Mode=OneWayToSource}"/>
+			<Button
+				Padding="10"
+				Margin="10"
+				HorizontalOptions="Fill"
+				Text="{Binding LocalizationManager[CodeButton], Mode=OneWay}"
+				Command="{Binding GetAccessTokenCommand}"/>
+		</VerticalStackLayout>
+	</Grid>
+</ContentPage>

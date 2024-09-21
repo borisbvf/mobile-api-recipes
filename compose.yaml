@@ -1,0 +1,30 @@
+services:
+  db:
+    build: ./Database
+    container_name: postgres-db
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${PG_PSWD}
+    networks:
+      - app_net
+  backend:
+    build: .
+    container_name: backend
+    restart: always
+    environment:
+      PG_PSWD: ${PG_PSWD}
+      PG_HOST: "db"
+      EMAIL_SMTP_SERVER: ${EMAIL_SMTP_SERVER}
+      EMAIL_SENDER: ${EMAIL_SENDER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+    ports:
+      - "8000:8000"
+    networks:
+      - app_net
+networks:
+  app_net:
+volumes:
+  db_data:
