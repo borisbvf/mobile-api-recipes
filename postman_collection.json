@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "e09e84c4-a784-4074-8f4f-25b92fbafdc3",
+		"name": "Recipes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28282902"
+	},
+	"item": [
+		{
+			"name": "{{host}}/owners/code_query",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/owners/code_query?email=name@test.test",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"owners",
+						"code_query"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "name@test.test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/owners/token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "name@test.test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/owners/token",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"owners",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/recipes/list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/recipes/list",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"recipes",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/recipes/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Recipe name\",\r\n    \"description\": \"Brief description\",\r\n    \"content\": \"Directions and other things\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/recipes/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"recipes",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/recipes/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"New name\",\r\n    \"description\": \"New description\",\r\n    \"content\": \"New content\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/recipes/2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"recipes",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/recipes/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/recipes/2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"recipes",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
