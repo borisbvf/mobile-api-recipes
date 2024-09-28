@@ -7,22 +7,15 @@
 	},
 	"item": [
 		{
-			"name": "{{host}}/owners/code_query",
+			"name": "/owners/code_query",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/owners/code_query?email=name@test.test",
+					"raw": "{{host}}/owners/code_query?email=test@test.com",
 					"host": [
 						"{{host}}"
 					],
@@ -33,7 +26,7 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "name@test.test"
+							"value": "test@test.com"
 						}
 					]
 				}
@@ -41,7 +34,7 @@
 			"response": []
 		},
 		{
-			"name": "{{host}}/owners/token",
+			"name": "/owners/token",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -74,14 +67,14 @@
 			"response": []
 		},
 		{
-			"name": "{{host}}/recipes/list",
+			"name": "/recipes/list",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -102,14 +95,14 @@
 			"response": []
 		},
 		{
-			"name": "{{host}}/recipes/",
+			"name": "/recipes/",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -139,14 +132,14 @@
 			"response": []
 		},
 		{
-			"name": "{{host}}/recipes/",
+			"name": "/recipes/",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -176,14 +169,14 @@
 			"response": []
 		},
 		{
-			"name": "{{host}}/recipes/",
+			"name": "/recipes/",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNzIyNDcxODgwfQ.IaYY5rkkjE99f7AYvCcdd7WKU1AD-dQWiNkRU9zMt3Y",
+							"value": "",
 							"type": "string"
 						}
 					]
