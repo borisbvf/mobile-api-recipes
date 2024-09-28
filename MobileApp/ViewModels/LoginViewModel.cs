@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.Maui.Alerts;
+using System.Windows.Input;
 
 namespace RecipeApp.ViewModels;
 public class LoginViewModel : BaseViewModel
@@ -36,48 +37,78 @@ public class LoginViewModel : BaseViewModel
 	public ICommand GetEmailCodeCommand => new Command(GetEmailCode);
 	private async void GetEmailCode(object obj)
 	{
-		string? email = obj as string;
-		if (email != null)
+		IsBusy = true;
+		try
 		{
-			await recipeService.SendEmailCode(email);
-		} else
+			string? email = obj as string;
+			if (email != null)
+			{
+				RequestResult result = await recipeService.SendEmailCode(email);
+				if (result.IsSuccess)
+				{
+					var toast = Toast.Make(LocalizationManager["NotificationEmailSent"].ToString()!);
+					await toast.Show();
+				}
+				else
+				{
+					await Application.Current!.MainPage!.DisplayAlert(
+						LocalizationManager["Warning"].ToString(),
+						result.ErrorMessage,
+						LocalizationManager["Ok"].ToString());
+				}
+			}
+			else
+			{
+				await Application.Current!.MainPage!.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["EmailIsEmptyWarning"].ToString(),
+					LocalizationManager["Ok"].ToString());
+			}
+		}
+		finally
 		{
-			await Application.Current!.MainPage!.DisplayAlert(
-				LocalizationManager["Warning"].ToString(), 
-				LocalizationManager["EmailIsEmptyWarning"].ToString(), 
-				LocalizationManager["Ok"].ToString());
+			IsBusy = false;
 		}
 	}
 
 	public ICommand GetAccessTokenCommand => new Command(GetAccessToken);
 	private async void GetAccessToken()
 	{
-		if (string.IsNullOrEmpty(email))
+		IsBusy = true;
+		try
 		{
-			await Application.Current!.MainPage!.DisplayAlert(
-				LocalizationManager["Warning"].ToString(),
-				LocalizationManager["EmailIsEmptyWarning"].ToString(),
-				LocalizationManager["Ok"].ToString());
-			return;
+			if (string.IsNullOrEmpty(email))
+			{
+				await Application.Current!.MainPage!.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["EmailIsEmptyWarning"].ToString(),
+					LocalizationManager["Ok"].ToString());
+				return;
+			}
+			if (string.IsNullOrEmpty(code))
+			{
+				await Application.Current!.MainPage!.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["CodeIsEmptyWarning"].ToString(),
+					LocalizationManager["Ok"].ToString());
+				return;
+			}
+			string? token = await recipeService.GetAuthToken(email, code);
+			if (token != null)
+			{
+				await Shell.Current.GoToAsync($"//{Constants.MainPageRoute}");
+			}
+			else
+			{
+				await Application.Current!.MainPage!.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["CodeIsWrongWarning"].ToString(),
+					LocalizationManager["Ok"].ToString());
+			}
 		}
-		if (string.IsNullOrEmpty(code))
+		finally
 		{
-			await Application.Current!.MainPage!.DisplayAlert(
-				LocalizationManager["Warning"].ToString(),
-				LocalizationManager["CodeIsEmptyWarning"].ToString(),
-				LocalizationManager["Ok"].ToString());
-			return;
-		}
-		string? token = await recipeService.GetAuthToken(email, code);
-		if (token != null)
-		{
-			await Shell.Current.GoToAsync($"//{Constants.MainPageRoute}");
-		} else
-		{
-			await Application.Current!.MainPage!.DisplayAlert(
-				LocalizationManager["Warning"].ToString(),
-				LocalizationManager["CodeIsWrongWarning"].ToString(),
-				LocalizationManager["Ok"].ToString());
+			IsBusy = false;
 		}
 	}
 }

@@ -187,11 +187,29 @@ namespace RecipeApp.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong, code was not sent..
+        /// </summary>
+        internal static string ErrCodeWasNotSent {
+            get {
+                return ResourceManager.GetString("ErrCodeWasNotSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         internal static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The server is not available..
+        /// </summary>
+        internal static string ErrServerUnavailable {
+            get {
+                return ResourceManager.GetString("ErrServerUnavailable", resourceCulture);
             }
         }
         
@@ -237,6 +255,15 @@ namespace RecipeApp.Resources.Localization {
         internal static string NamePlaceholder {
             get {
                 return ResourceManager.GetString("NamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code was successfully sent.
+        /// </summary>
+        internal static string NotificationEmailSent {
+            get {
+                return ResourceManager.GetString("NotificationEmailSent", resourceCulture);
             }
         }
         

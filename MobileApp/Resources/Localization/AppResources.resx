@@ -204,4 +204,13 @@
   <data name="Warning" xml:space="preserve">
     <value>Warning</value>
   </data>
+  <data name="NotificationEmailSent" xml:space="preserve">
+    <value>Code was successfully sent</value>
+  </data>
+  <data name="ErrCodeWasNotSent" xml:space="preserve">
+    <value>Something went wrong, code was not sent.</value>
+  </data>
+  <data name="ErrServerUnavailable" xml:space="preserve">
+    <value>The server is not available.</value>
+  </data>
 </root>

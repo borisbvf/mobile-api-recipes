@@ -16,7 +16,7 @@ public class RecipeService : IRecipeService
 		httpClient = new();
 	}
 
-	private const string BaseUrl = "http://localhost:8000";
+	private readonly string BaseUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8000" : "http://localhost:8000";
 
 	private bool IsValidToken(string token)
 	{
@@ -58,16 +58,6 @@ public class RecipeService : IRecipeService
 	public async Task<IEnumerable<Recipe>> GetRecipesAsync()
 	{
 		List<Recipe> list = new List<Recipe>();
-		/*
-		//-------------------------------------------------------------------------------------------
-		list.Add(new Recipe { Id = 1, Name = "Pancakes", Description = "Just old good pancakes", Content = "We will need some dow, sugar and salt." });
-		list.Add(new Recipe { Id = 2, Name = "Verguni", Description = "Yummy thing to eat", Content = "Yougurt is neccesary" });
-		list.Add(new Recipe { Id = 3, Name = "Dougnuts", Description = "Fried dough", Content = "Requares a lot of oil" });
-		list.Add(new Recipe { Id = 4, Name = "Chocolate chip cookies", Description = "Backed dough", Content = "You will need chocolate chips" });
-		list.Add(new Recipe { Id = 5, Name = "Pine-cones cookies", Description = "Chocolae cookies that lok like pine-cones", Content = "You will need some good cocoa" });
-		return list;
-		//-------------------------------------------------------------------------------------------
-		*/
 		string uri = $"{BaseUrl}/recipes/list";
 		try
 		{
@@ -152,22 +142,32 @@ public class RecipeService : IRecipeService
 		}
 	}
 
-	public async Task SendEmailCode(string email)
+	public async Task<RequestResult> SendEmailCode(string email)
 	{
 		string uri = $"{BaseUrl}/owners/code_query?email={email}";
+		RequestResult result = new();
 		try
 		{
 			HttpResponseMessage response = await httpClient.PostAsync(uri, null);
 			if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("Email successfully sent.");
+				result.IsSuccess = true;
+			}
+			else
+			{
+				result.IsSuccess = false;
+				int statusCode = (int)response.StatusCode;
+				string content = await response.Content.ReadAsStringAsync();
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrCodeWasNotSent"]} [{statusCode} {content}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
-			throw;
+			result.IsSuccess = false;
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrServerUnavailable"]} [{ex.Message}]";
 		}
+		return result;
 	}
 
 	public async Task<string?> GetAuthToken(string email, string code)

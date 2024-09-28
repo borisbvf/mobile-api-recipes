@@ -10,6 +10,7 @@
     <Grid
 		RowDefinitions="70,200,300,*"
 		RowSpacing="5">
+		<ActivityIndicator IsRunning="{Binding IsBusy}"/>
 		<Label
 			Grid.Row="0"
 			Padding="10"
@@ -29,11 +30,13 @@
 			<Entry
 				Margin="5"
 				Placeholder="test@test.com"
+				IsEnabled="{Binding IsEnabled}"
 				Text="{Binding Email, Mode=OneWayToSource}"/>
 			<Button
 				Padding="10"
 				Margin="10"
 				Text="{Binding LocalizationManager[SubmitEmail], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Command="{Binding GetEmailCodeCommand}"
 				CommandParameter="{Binding Email}"/>
 		</VerticalStackLayout>
@@ -46,12 +49,14 @@
 			<Entry
 				Margin="5"
 				Placeholder="000000"
+				IsEnabled="{Binding IsEnabled}"
 				Text="{Binding Code, Mode=OneWayToSource}"/>
 			<Button
 				Padding="10"
 				Margin="10"
 				HorizontalOptions="Fill"
 				Text="{Binding LocalizationManager[CodeButton], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Command="{Binding GetAccessTokenCommand}"/>
 		</VerticalStackLayout>
 	</Grid>
