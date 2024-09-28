@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace RecipeApp.Services;
 public interface IRecipeService
 {
-	public Task<IEnumerable<Recipe>> GetRecipesAsync();
-	public Task AddRecipeAsync(Recipe recipe);
-	public Task UpdateRecipeAsync(Recipe recipe);
-	public Task DeleteRecipeAsync(int recipeId);
+	public Task<RequestResult<IEnumerable<Recipe>>> GetRecipesAsync();
+	public Task<RequestResult> AddRecipeAsync(Recipe recipe);
+	public Task<RequestResult> UpdateRecipeAsync(Recipe recipe);
+	public Task<RequestResult> DeleteRecipeAsync(int recipeId);
 	public Task<RequestResult> SendEmailCode(string email);
-	public Task<string?> GetAuthToken(string email, string code);
+	public Task<RequestResult<string?>> GetAuthToken(string email, string code);
 }

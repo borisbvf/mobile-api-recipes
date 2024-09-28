@@ -93,8 +93,15 @@ public class LoginViewModel : BaseViewModel
 					LocalizationManager["Ok"].ToString());
 				return;
 			}
-			string? token = await recipeService.GetAuthToken(email, code);
-			if (token != null)
+			RequestResult<string?> result = await recipeService.GetAuthToken(email, code);
+			if (!result.IsSuccess)
+			{
+				await Application.Current!.MainPage!.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					result.ErrorMessage,
+					LocalizationManager["Ok"].ToString());
+			}
+			else if (result.Data != null)
 			{
 				await Shell.Current.GoToAsync($"//{Constants.MainPageRoute}");
 			}

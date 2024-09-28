@@ -20,7 +20,7 @@
 		Padding="2"
 		Margin="2">
 		<RefreshView
-			IsRefreshing="{Binding IsRefreshing}"
+			IsRefreshing="{Binding IsBusy, Mode=OneWayToSource}"
 			Command="{Binding GetRecipesCommand}">
 			<CollectionView
 				ItemsSource="{Binding Recipes}"

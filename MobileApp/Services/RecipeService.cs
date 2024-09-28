@@ -31,55 +31,85 @@ public class RecipeService : IRecipeService
 		}
 	}
 
-	private async Task<string> GetToken()
+	private async Task<RequestResult<string?>> CheckToken()
 	{
+		RequestResult<string?> result = new();
 		string? token = await SecureStorage.Default.GetAsync(Constants.TokenKey);
-
 		if (token == null || !IsValidToken(token))
 		{
 			string? email = await SecureStorage.Default.GetAsync(Constants.EmailKey);
 			string? code = await SecureStorage.Default.GetAsync(Constants.CodeKey);
 			if (email != null && code != null)
 			{
-				token = await GetAuthToken(email, code);
+				RequestResult<string?> authTokenResult = await GetAuthToken(email, code);
+				if (authTokenResult.IsSuccess)
+				{
+					result.IsSuccess = true;
+					result.Data = authTokenResult.Data;
+				}
+				else
+				{
+					result.IsSuccess = false;
+					result.ErrorMessage = "Something went wrong, auth token is invalid. Please try to logout and login again.";
+				}
 			}
 			else
 			{
-				token = null;
+				result.IsSuccess = false;
+				result.ErrorMessage = "Something went wrong, auth token is invalid. Please try to logout and login again.";
 			}
 		}
-		if (token == null)
+		else
 		{
-			throw new InvalidTokenException("Something went wrong, auth token is invalid. Please try to logout and login again.");
+			result.IsSuccess = true;
+			result.Data = token;
 		}
-		return token;
+		return result;
 	}
 
-	public async Task<IEnumerable<Recipe>> GetRecipesAsync()
+	public async Task<RequestResult<IEnumerable<Recipe>>> GetRecipesAsync()
 	{
-		List<Recipe> list = new List<Recipe>();
+		RequestResult<IEnumerable<Recipe>> result = new();
 		string uri = $"{BaseUrl}/recipes/list";
 		try
 		{
-			string token = await GetToken();
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			HttpResponseMessage response = await httpClient.GetAsync(uri);
-			if (response.IsSuccessStatusCode)
+			RequestResult<string?> tokenResult = await CheckToken();
+			if (tokenResult.IsSuccess)
 			{
-				string content = await response.Content.ReadAsStringAsync();
-				list = JsonSerializer.Deserialize<List<Recipe>>(content)!;
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				HttpResponseMessage response = await httpClient.GetAsync(uri);
+				if (response.IsSuccessStatusCode)
+				{
+					string content = await response.Content.ReadAsStringAsync();
+					result.IsSuccess = true;
+					result.Data = JsonSerializer.Deserialize<List<Recipe>>(content)!;
+				}
+				else
+				{
+					result.IsSuccess = false;
+					int statusCode = (int)response.StatusCode;
+					string content = await response.Content.ReadAsStringAsync();
+					result.ErrorMessage = $"[{statusCode} {content}]";
+				}
+			}
+			else
+			{
+				result.IsSuccess = false;
+				result.ErrorMessage = tokenResult.ErrorMessage;
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
-			throw;
+			result.IsSuccess = false;
+			result.ErrorMessage = $"{ex.Message}";
 		}
-		return list;
+		return result;
 	}
 
-	public async Task AddRecipeAsync(Recipe recipe)
+	public async Task<RequestResult> AddRecipeAsync(Recipe recipe)
 	{
+		RequestResult result = new();
 		string uri = $"{BaseUrl}/recipes/";
 		try
 		{
@@ -98,10 +128,12 @@ public class RecipeService : IRecipeService
 			Debug.WriteLine(ex.Message);
 			throw;
 		}
+		return result;
 	}
 
-	public async Task UpdateRecipeAsync(Recipe recipe)
+	public async Task<RequestResult> UpdateRecipeAsync(Recipe recipe)
 	{
+		RequestResult result = new();
 		string uri = $"{BaseUrl}/recipes/{recipe.Id}";
 		try
 		{
@@ -120,10 +152,12 @@ public class RecipeService : IRecipeService
 			Debug.WriteLine(ex.Message);
 			throw;
 		}
+		return result;
 	}
 
-	public async Task DeleteRecipeAsync(int recipeId)
+	public async Task<RequestResult> DeleteRecipeAsync(int recipeId)
 	{
+		RequestResult result = new();
 		string uri = $"{BaseUrl}/recipes/{recipeId}";
 		try
 		{
@@ -140,6 +174,7 @@ public class RecipeService : IRecipeService
 			Debug.WriteLine(ex.Message);
 			throw;
 		}
+		return result;
 	}
 
 	public async Task<RequestResult> SendEmailCode(string email)
@@ -170,9 +205,10 @@ public class RecipeService : IRecipeService
 		return result;
 	}
 
-	public async Task<string?> GetAuthToken(string email, string code)
+	public async Task<RequestResult<string?>> GetAuthToken(string email, string code)
 	{
 		string uri = $"{BaseUrl}/owners/token";
+		RequestResult<string?> result = new();
 		RecipeToken? token = null;
 		try
 		{
@@ -190,15 +226,21 @@ public class RecipeService : IRecipeService
 					await SecureStorage.Default.SetAsync(Constants.EmailKey, email);
 					await SecureStorage.Default.SetAsync(Constants.CodeKey, code);
 					await SecureStorage.Default.SetAsync(Constants.TokenKey, token?.AccessToken!);
+					result.IsSuccess = true;
+					result.Data = token?.AccessToken;
 				}
-				Debug.WriteLine("Auth token successfully received.");
+			}
+			if (!result.IsSuccess)
+			{
+				result.ErrorMessage = $"{LocalizationManager.Instance["Failed to retrieve auth token."]}";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
-			throw;
+			result.IsSuccess = false;
+			result.ErrorMessage = $"{LocalizationManager.Instance["Failed to retrieve auth token."]} [{ex.Message}]";
 		}
-		return token?.AccessToken;
+		return result;
 	}
 }

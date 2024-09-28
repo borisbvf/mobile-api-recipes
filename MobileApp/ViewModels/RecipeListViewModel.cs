@@ -17,33 +17,29 @@ public class RecipeListViewModel : BaseViewModel
 		this.recipeService = recipeService;
 	}
 
-	private bool isRefreshing;
-	public bool IsRefreshing
-	{
-		get => isRefreshing;
-		set
-		{
-			if (isRefreshing != value)
-			{
-				isRefreshing = value;
-				OnPropertyChanged();
-			}
-		}
-	}
-
 	public ICommand GetRecipesCommand => new Command(GetRecipesAsync);
 	public async void GetRecipesAsync()
 	{
 		if (IsBusy)
 			return;
+		IsBusy = true;
 		try
 		{
-			IsBusy = true;
-			IEnumerable<Recipe> data = await recipeService.GetRecipesAsync();
-			if (Recipes.Count > 0)
-				Recipes.Clear();
-			foreach (Recipe recipe in data)
-				Recipes.Add(recipe);
+			RequestResult<IEnumerable<Recipe>> result = await recipeService.GetRecipesAsync();
+			if (result.IsSuccess)
+			{
+				if (Recipes.Count > 0)
+					Recipes.Clear();
+				foreach (Recipe recipe in result.Data!)
+					Recipes.Add(recipe);
+			}
+			else
+			{
+				await Shell.Current.DisplayAlert(
+					LocalizationManager["Error"].ToString(),
+					result.ErrorMessage,
+					LocalizationManager["Ok"].ToString());
+			}
 		}
 		catch (Exception ex)
 		{
@@ -56,7 +52,6 @@ public class RecipeListViewModel : BaseViewModel
 		finally
 		{
 			IsBusy = false;
-			IsRefreshing = false;
 		}
 	}
 
