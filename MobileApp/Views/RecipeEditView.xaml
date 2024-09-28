@@ -17,6 +17,7 @@
 				Text="{Binding LocalizationManager[Name], Mode=OneWay}"/>
 			<Entry
 				Placeholder="{Binding LocalizationManager[NamePlaceholder], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Text="{Binding Recipe.Name, Mode=TwoWay}"/>
 			<Label
 				FontAttributes="Bold"
@@ -24,6 +25,7 @@
 				Text="{Binding LocalizationManager[Description], Mode=OneWay}"/>
 			<Entry
 				Placeholder="{Binding LocalizationManager[DescriptionPlaceholder], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Text="{Binding Recipe.Description, Mode=TwoWay}"/>
 		</VerticalStackLayout>
 		<VerticalStackLayout
@@ -35,6 +37,7 @@
 			<Editor
 				AutoSize="TextChanges"
 				Placeholder="{Binding LocalizationManager[DirectionsPlaceholder], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Text="{Binding Recipe.Content, Mode=TwoWay}"/>
 		</VerticalStackLayout>
 		<VerticalStackLayout
@@ -42,11 +45,13 @@
 			<Button
 				Margin="5"
 				Text="{Binding LocalizationManager[Save], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Command="{Binding SaveCommand}"
 				CommandParameter="{Binding Recipe}"/>
 			<Button
 				Margin="5"
 				Text="{Binding LocalizationManager[Cancel], Mode=OneWay}"
+				IsEnabled="{Binding IsEnabled}"
 				Command="{Binding CancelCommand}"/>
 		</VerticalStackLayout>
 	</Grid>

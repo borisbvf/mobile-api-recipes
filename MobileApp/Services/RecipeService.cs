@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Maui.Storage;
 
 namespace RecipeApp.Services;
 
@@ -50,13 +49,13 @@ public class RecipeService : IRecipeService
 				else
 				{
 					result.IsSuccess = false;
-					result.ErrorMessage = "Something went wrong, auth token is invalid. Please try to logout and login again.";
+					result.ErrorMessage = LocalizationManager.Instance["ErrorAuthTokenInvalid"].ToString();
 				}
 			}
 			else
 			{
 				result.IsSuccess = false;
-				result.ErrorMessage = "Something went wrong, auth token is invalid. Please try to logout and login again.";
+				result.ErrorMessage = LocalizationManager.Instance["ErrorAuthTokenInvalid"].ToString();
 			}
 		}
 		else
@@ -89,20 +88,20 @@ public class RecipeService : IRecipeService
 					result.IsSuccess = false;
 					int statusCode = (int)response.StatusCode;
 					string content = await response.Content.ReadAsStringAsync();
-					result.ErrorMessage = $"[{statusCode} {content}]";
+					result.ErrorMessage = $"{LocalizationManager.Instance["ErrorGettingRecipesFailed"]} [{statusCode} {content}]";
 				}
 			}
 			else
 			{
 				result.IsSuccess = false;
-				result.ErrorMessage = tokenResult.ErrorMessage;
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrorGettingRecipesFailed"]} [{tokenResult.ErrorMessage}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
 			result.IsSuccess = false;
-			result.ErrorMessage = $"{ex.Message}";
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrorGettingRecipesFailed"]} [{ex.Message}]";
 		}
 		return result;
 	}
@@ -113,20 +112,36 @@ public class RecipeService : IRecipeService
 		string uri = $"{BaseUrl}/recipes/";
 		try
 		{
-			string? token = await SecureStorage.Default.GetAsync(Constants.TokenKey);
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			string data = JsonSerializer.Serialize(recipe);
-			StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-			HttpResponseMessage response = await httpClient.PostAsync(uri, content);
-			if (response.IsSuccessStatusCode)
+			RequestResult<string?> tokenResult = await CheckToken();
+			if (tokenResult.IsSuccess)
 			{
-				Debug.WriteLine("Recipe successfully created.");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				string data = JsonSerializer.Serialize(recipe);
+				StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+				HttpResponseMessage response = await httpClient.PostAsync(uri, content);
+				if (response.IsSuccessStatusCode)
+				{
+					result.IsSuccess = true;
+				}
+				else
+				{
+					result.IsSuccess = false;
+					int statusCode = (int)response.StatusCode;
+					string resContent = await response.Content.ReadAsStringAsync();
+					result.ErrorMessage = $"{LocalizationManager.Instance["ErrorAddingRecipe"]} [{statusCode} {resContent}]";
+				}
+			}
+			else
+			{
+				result.IsSuccess = false;
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrorAddingRecipe"]} [{tokenResult.ErrorMessage}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
-			throw;
+			result.IsSuccess = false;
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrorAddingRecipe"]} [{ex.Message}]";
 		}
 		return result;
 	}
@@ -137,20 +152,36 @@ public class RecipeService : IRecipeService
 		string uri = $"{BaseUrl}/recipes/{recipe.Id}";
 		try
 		{
-			string? token = await SecureStorage.Default.GetAsync(Constants.TokenKey);
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			string data = JsonSerializer.Serialize(recipe);
-			StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-			HttpResponseMessage response = await httpClient.PutAsync(uri, content);
-			if (response.IsSuccessStatusCode)
+			RequestResult<string?> tokenResult = await CheckToken();
+			if (tokenResult.IsSuccess)
 			{
-				Debug.WriteLine("Recipe successfully updated.");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				string data = JsonSerializer.Serialize(recipe);
+				StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+				HttpResponseMessage response = await httpClient.PutAsync(uri, content);
+				if (response.IsSuccessStatusCode)
+				{
+					result.IsSuccess = true;
+				}
+				else
+				{
+					result.IsSuccess = false;
+					int statusCode = (int)response.StatusCode;
+					string resContent = await response.Content.ReadAsStringAsync();
+					result.ErrorMessage = $"{LocalizationManager.Instance["ErrorUpdatingRecipe"]} [{statusCode} {resContent}]";
+				}
+			}
+			else
+			{
+				result.IsSuccess = false;
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrorUpdatingRecipe"]} [{tokenResult.ErrorMessage}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
-			throw;
+			result.IsSuccess = false;
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrorUpdatingRecipe"]} [{ex.Message}]";
 		}
 		return result;
 	}
@@ -161,18 +192,34 @@ public class RecipeService : IRecipeService
 		string uri = $"{BaseUrl}/recipes/{recipeId}";
 		try
 		{
-			string? token = await SecureStorage.Default.GetAsync(Constants.TokenKey);
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			HttpResponseMessage response = await httpClient.DeleteAsync(uri);
-			if (response.IsSuccessStatusCode)
+			RequestResult<string?> tokenResult = await CheckToken();
+			if (tokenResult.IsSuccess)
 			{
-				Debug.WriteLine("Recipe successfully deleted.");
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				HttpResponseMessage response = await httpClient.DeleteAsync(uri);
+				if (response.IsSuccessStatusCode)
+				{
+					result.IsSuccess = true;
+				}
+				else
+				{
+					result.IsSuccess = false;
+					int statusCode = (int)response.StatusCode;
+					string resContent = await response.Content.ReadAsStringAsync();
+					result.ErrorMessage = $"{LocalizationManager.Instance["ErrorDeletingRecipe"]} [{statusCode} {resContent}]";
+				}
+			}
+			else
+			{
+				result.IsSuccess = false;
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrorDeletingRecipe"]} [{tokenResult.ErrorMessage}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
-			throw;
+			result.IsSuccess = false;
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrorDeletingRecipe"]} [{ex.Message}]";
 		}
 		return result;
 	}
@@ -193,14 +240,14 @@ public class RecipeService : IRecipeService
 				result.IsSuccess = false;
 				int statusCode = (int)response.StatusCode;
 				string content = await response.Content.ReadAsStringAsync();
-				result.ErrorMessage = $"{LocalizationManager.Instance["ErrCodeWasNotSent"]} [{statusCode} {content}]";
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrorCodeWasNotSent"]} [{statusCode} {content}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
 			result.IsSuccess = false;
-			result.ErrorMessage = $"{LocalizationManager.Instance["ErrServerUnavailable"]} [{ex.Message}]";
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrorServerUnavailable"]} [{ex.Message}]";
 		}
 		return result;
 	}
@@ -229,17 +276,25 @@ public class RecipeService : IRecipeService
 					result.IsSuccess = true;
 					result.Data = token?.AccessToken;
 				}
+				else
+				{
+					result.IsSuccess = false;
+					result.ErrorMessage = $"{LocalizationManager.Instance["ErrorFailedRetrieveToken"]}";
+				}
 			}
-			if (!result.IsSuccess)
+			else
 			{
-				result.ErrorMessage = $"{LocalizationManager.Instance["Failed to retrieve auth token."]}";
+				result.IsSuccess = false;
+				int statusCode = (int)response.StatusCode;
+				string resContent = await response.Content.ReadAsStringAsync();
+				result.ErrorMessage = $"{LocalizationManager.Instance["ErrorFailedRetrieveToken"]} [{statusCode} {resContent}]";
 			}
 		}
 		catch (Exception ex)
 		{
 			Debug.WriteLine(ex.Message);
 			result.IsSuccess = false;
-			result.ErrorMessage = $"{LocalizationManager.Instance["Failed to retrieve auth token."]} [{ex.Message}]";
+			result.ErrorMessage = $"{LocalizationManager.Instance["ErrorFailedRetrieveToken"]} [{ex.Message}]";
 		}
 		return result;
 	}

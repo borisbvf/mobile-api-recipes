@@ -36,22 +36,40 @@ public class RecipeEditViewModel: BaseViewModel
 		{
 			if (string.IsNullOrEmpty(recipe.Name))
 			{
-				await Shell.Current.DisplayAlert(null, "Recipe's name cannot be empty!", "Ok");
+				await Shell.Current.DisplayAlert(
+						LocalizationManager["Warning"].ToString(),
+						LocalizationManager["WrnRecipeNameEmpty"].ToString(),
+						LocalizationManager["Ok"].ToString());
 				return;
 			}
 			if (string.IsNullOrEmpty(recipe.Content))
 			{
-				await Shell.Current.DisplayAlert(null, "Recipe's content cannot be empty!", "Ok");
+				await Shell.Current.DisplayAlert(
+						LocalizationManager["Warning"].ToString(),
+						LocalizationManager["WrnRecipeDirectionsEmpty"].ToString(),
+						LocalizationManager["Ok"].ToString());
 				return;
 			}
+			RequestResult result;
 			if (recipe.Id == 0)
 			{
-				await recipeService.AddRecipeAsync(recipe);
-			} else
-			{
-				await recipeService.UpdateRecipeAsync(recipe);
+				result = await recipeService.AddRecipeAsync(recipe);
 			}
-			await Shell.Current.GoToAsync("..");
+			else
+			{
+				result = await recipeService.UpdateRecipeAsync(recipe);
+			}
+			if (result.IsSuccess)
+			{
+				await Shell.Current.GoToAsync("..");
+			}
+			else
+			{
+				await Shell.Current.DisplayAlert(
+						LocalizationManager["Warning"].ToString(),
+						result.ErrorMessage,
+						LocalizationManager["Ok"].ToString());
+			}
 		}
 	}
 

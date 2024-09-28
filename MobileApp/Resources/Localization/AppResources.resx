@@ -207,10 +207,34 @@
   <data name="NotificationEmailSent" xml:space="preserve">
     <value>Code was successfully sent</value>
   </data>
-  <data name="ErrCodeWasNotSent" xml:space="preserve">
+  <data name="ErrorCodeWasNotSent" xml:space="preserve">
     <value>Something went wrong, code was not sent.</value>
   </data>
-  <data name="ErrServerUnavailable" xml:space="preserve">
+  <data name="ErrorServerUnavailable" xml:space="preserve">
     <value>The server is not available.</value>
+  </data>
+  <data name="ErrorFailedRetrieveToken" xml:space="preserve">
+    <value>Failed to retrieve authentication token.</value>
+  </data>
+  <data name="ErrorGettingRecipesFailed" xml:space="preserve">
+    <value>Getting recipe list failed.</value>
+  </data>
+  <data name="ErrorAddingRecipe" xml:space="preserve">
+    <value>Adding recipe failed.</value>
+  </data>
+  <data name="ErrorUpdatingRecipe" xml:space="preserve">
+    <value>Updating recipe failed.</value>
+  </data>
+  <data name="ErrorDeletingRecipe" xml:space="preserve">
+    <value>Deleting recipe failed.</value>
+  </data>
+  <data name="ErrorAuthTokenInvalid" xml:space="preserve">
+    <value>Something went wrong, auth token is invalid. Please try to logout and login again.</value>
+  </data>
+  <data name="WrnRecipeNameEmpty" xml:space="preserve">
+    <value>Recipe's name is empty.</value>
+  </data>
+  <data name="WrnRecipeDirectionsEmpty" xml:space="preserve">
+    <value>Recipe's directions are empty.</value>
   </data>
 </root>

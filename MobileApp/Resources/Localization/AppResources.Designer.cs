@@ -187,15 +187,6 @@ namespace RecipeApp.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Something went wrong, code was not sent..
-        /// </summary>
-        internal static string ErrCodeWasNotSent {
-            get {
-                return ResourceManager.GetString("ErrCodeWasNotSent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         internal static string Error {
@@ -205,11 +196,74 @@ namespace RecipeApp.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adding recipe failed..
+        /// </summary>
+        internal static string ErrorAddingRecipe {
+            get {
+                return ResourceManager.GetString("ErrorAddingRecipe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong, auth token is invalid. Please try to logout and login again..
+        /// </summary>
+        internal static string ErrorAuthTokenInvalid {
+            get {
+                return ResourceManager.GetString("ErrorAuthTokenInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong, code was not sent..
+        /// </summary>
+        internal static string ErrorCodeWasNotSent {
+            get {
+                return ResourceManager.GetString("ErrorCodeWasNotSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting recipe failed..
+        /// </summary>
+        internal static string ErrorDeletingRecipe {
+            get {
+                return ResourceManager.GetString("ErrorDeletingRecipe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to retrieve authentication token..
+        /// </summary>
+        internal static string ErrorFailedRetrieveToken {
+            get {
+                return ResourceManager.GetString("ErrorFailedRetrieveToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting recipe list failed..
+        /// </summary>
+        internal static string ErrorGettingRecipesFailed {
+            get {
+                return ResourceManager.GetString("ErrorGettingRecipesFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The server is not available..
         /// </summary>
-        internal static string ErrServerUnavailable {
+        internal static string ErrorServerUnavailable {
             get {
-                return ResourceManager.GetString("ErrServerUnavailable", resourceCulture);
+                return ResourceManager.GetString("ErrorServerUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating recipe failed..
+        /// </summary>
+        internal static string ErrorUpdatingRecipe {
+            get {
+                return ResourceManager.GetString("ErrorUpdatingRecipe", resourceCulture);
             }
         }
         
@@ -345,6 +399,24 @@ namespace RecipeApp.Resources.Localization {
         internal static string Warning {
             get {
                 return ResourceManager.GetString("Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe&apos;s directions are empty..
+        /// </summary>
+        internal static string WrnRecipeDirectionsEmpty {
+            get {
+                return ResourceManager.GetString("WrnRecipeDirectionsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe&apos;s name is empty..
+        /// </summary>
+        internal static string WrnRecipeNameEmpty {
+            get {
+                return ResourceManager.GetString("WrnRecipeNameEmpty", resourceCulture);
             }
         }
     }

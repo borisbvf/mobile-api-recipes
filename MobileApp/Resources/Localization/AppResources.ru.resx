@@ -207,10 +207,34 @@
   <data name="NotificationEmailSent" xml:space="preserve">
     <value>Код был успешно отправлен</value>
   </data>
-  <data name="ErrCodeWasNotSent" xml:space="preserve">
+  <data name="ErrorCodeWasNotSent" xml:space="preserve">
     <value>Что-то пошло не так, код не был отправлен.</value>
   </data>
-  <data name="ErrServerUnavailable" xml:space="preserve">
+  <data name="ErrorServerUnavailable" xml:space="preserve">
     <value>Сервер недоступен.</value>
+  </data>
+  <data name="ErrorFailedRetrieveToken" xml:space="preserve">
+    <value>Не удалось получить токен аутентификации.</value>
+  </data>
+  <data name="ErrorGettingRecipesFailed" xml:space="preserve">
+    <value>Не удалось получить список рецептов.</value>
+  </data>
+  <data name="ErrorAddingRecipe" xml:space="preserve">
+    <value>Не удалось добавить рецепт.</value>
+  </data>
+  <data name="ErrorUpdatingRecipe" xml:space="preserve">
+    <value>Не удалось обновить рецепт.</value>
+  </data>
+  <data name="ErrorDeletingRecipe" xml:space="preserve">
+    <value>Не удалось удалить рецепт.</value>
+  </data>
+  <data name="ErrorAuthTokenInvalid" xml:space="preserve">
+    <value>Что-то пошло не так, токен аутентификации недействителен. Попробуйте выйти из системы и зайти повторно.</value>
+  </data>
+  <data name="WrnRecipeNameEmpty" xml:space="preserve">
+    <value>Наименование рецепта не заполнено.</value>
+  </data>
+  <data name="WrnRecipeContentEmpty" xml:space="preserve">
+    <value>Инструкции рецепта не заполнены.</value>
   </data>
 </root>
