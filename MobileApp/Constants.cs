@@ -6,6 +6,7 @@ public class Constants
 	public const string LanguageKey = "Language";
 	public const string EmailKey = "UserEmail";
 	public const string CodeKey = "UserCode";
+	public const string ServerAddressKey = "ServerAddress";
 
 	public const string MainPageRoute = "MainPage";
 	public const string LoginPageRoute = "LoginPage";

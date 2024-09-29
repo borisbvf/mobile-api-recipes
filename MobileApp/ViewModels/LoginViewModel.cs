@@ -12,6 +12,17 @@ public class LoginViewModel : BaseViewModel
 
 	public LocalizationManager LocalizationManager => LocalizationManager.Instance;
 
+	private string? serverAddress;
+	public string? ServerAddress
+	{
+		get => serverAddress;
+		set
+		{
+			serverAddress = value;
+			OnPropertyChanged();
+		}
+	}
+
 	private string? email;
 	public string? Email
 	{
@@ -40,28 +51,33 @@ public class LoginViewModel : BaseViewModel
 		IsBusy = true;
 		try
 		{
-			string? email = obj as string;
-			if (email != null)
+			if (string.IsNullOrEmpty(serverAddress))
 			{
-				RequestResult result = await recipeService.SendEmailCode(email);
-				if (result.IsSuccess)
-				{
-					var toast = Toast.Make(LocalizationManager["NotificationEmailSent"].ToString()!);
-					await toast.Show();
-				}
-				else
-				{
-					await Application.Current!.MainPage!.DisplayAlert(
-						LocalizationManager["Warning"].ToString(),
-						result.ErrorMessage,
-						LocalizationManager["Ok"].ToString());
-				}
+				await Shell.Current.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["WrnServerAddressEmpty"].ToString(),
+					LocalizationManager["Ok"].ToString());
+				return;
+			}
+			if (string.IsNullOrEmpty(email))
+			{
+				await Shell.Current.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["EmailIsEmptyWarning"].ToString(),
+					LocalizationManager["Ok"].ToString());
+				return;
+			}
+			RequestResult result = await recipeService.SendEmailCode(email, serverAddress);
+			if (result.IsSuccess)
+			{
+				var toast = Toast.Make(LocalizationManager["NotificationEmailSent"].ToString()!);
+				await toast.Show();
 			}
 			else
 			{
-				await Application.Current!.MainPage!.DisplayAlert(
+				await Shell.Current.DisplayAlert(
 					LocalizationManager["Warning"].ToString(),
-					LocalizationManager["EmailIsEmptyWarning"].ToString(),
+					result.ErrorMessage,
 					LocalizationManager["Ok"].ToString());
 			}
 		}
@@ -77,9 +93,17 @@ public class LoginViewModel : BaseViewModel
 		IsBusy = true;
 		try
 		{
+			if (string.IsNullOrEmpty(serverAddress))
+			{
+				await Shell.Current.DisplayAlert(
+					LocalizationManager["Warning"].ToString(),
+					LocalizationManager["WrnServerAddressEmpty"].ToString(),
+					LocalizationManager["Ok"].ToString());
+				return;
+			}
 			if (string.IsNullOrEmpty(email))
 			{
-				await Application.Current!.MainPage!.DisplayAlert(
+				await Shell.Current.DisplayAlert(
 					LocalizationManager["Warning"].ToString(),
 					LocalizationManager["EmailIsEmptyWarning"].ToString(),
 					LocalizationManager["Ok"].ToString());
@@ -87,16 +111,16 @@ public class LoginViewModel : BaseViewModel
 			}
 			if (string.IsNullOrEmpty(code))
 			{
-				await Application.Current!.MainPage!.DisplayAlert(
+				await Shell.Current.DisplayAlert(
 					LocalizationManager["Warning"].ToString(),
 					LocalizationManager["CodeIsEmptyWarning"].ToString(),
 					LocalizationManager["Ok"].ToString());
 				return;
 			}
-			RequestResult<string?> result = await recipeService.GetAuthToken(email, code);
+			RequestResult<string?> result = await recipeService.GetAuthToken(serverAddress, email, code);
 			if (!result.IsSuccess)
 			{
-				await Application.Current!.MainPage!.DisplayAlert(
+				await Shell.Current.DisplayAlert(
 					LocalizationManager["Warning"].ToString(),
 					result.ErrorMessage,
 					LocalizationManager["Ok"].ToString());
@@ -107,7 +131,7 @@ public class LoginViewModel : BaseViewModel
 			}
 			else
 			{
-				await Application.Current!.MainPage!.DisplayAlert(
+				await Shell.Current.DisplayAlert(
 					LocalizationManager["Warning"].ToString(),
 					LocalizationManager["CodeIsWrongWarning"].ToString(),
 					LocalizationManager["Ok"].ToString());

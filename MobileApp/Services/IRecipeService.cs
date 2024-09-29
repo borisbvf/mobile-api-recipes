@@ -11,6 +11,6 @@ public interface IRecipeService
 	public Task<RequestResult> AddRecipeAsync(Recipe recipe);
 	public Task<RequestResult> UpdateRecipeAsync(Recipe recipe);
 	public Task<RequestResult> DeleteRecipeAsync(int recipeId);
-	public Task<RequestResult> SendEmailCode(string email);
-	public Task<RequestResult<string?>> GetAuthToken(string email, string code);
+	public Task<RequestResult> SendEmailCode(string email, string serverAddress);
+	public Task<RequestResult<string?>> GetAuthToken(string serverAddress, string email, string code);
 }

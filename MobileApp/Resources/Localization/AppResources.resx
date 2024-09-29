@@ -237,4 +237,10 @@
   <data name="WrnRecipeDirectionsEmpty" xml:space="preserve">
     <value>Recipe's directions are empty.</value>
   </data>
+  <data name="ServerAddress" xml:space="preserve">
+    <value>Server address:</value>
+  </data>
+  <data name="WrnServerAddressEmpty" xml:space="preserve">
+    <value>Server address is empty.</value>
+  </data>
 </root>

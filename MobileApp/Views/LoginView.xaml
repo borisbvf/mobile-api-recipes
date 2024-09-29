@@ -8,7 +8,7 @@
 			 Shell.FlyoutBehavior="Disabled"
              Title="LoginView">
     <Grid
-		RowDefinitions="70,200,300,*"
+		RowDefinitions="70,150,200,300,*"
 		RowSpacing="5">
 		<ActivityIndicator IsRunning="{Binding IsBusy}"/>
 		<Label
@@ -22,6 +22,19 @@
 			Text="{Binding LocalizationManager[Registration], Mode=OneWay}"/>
 		<VerticalStackLayout
 			Grid.Row="1">
+			<Label
+				Padding="5"
+				Margin="5"
+				Text="{Binding LocalizationManager[ServerAddress], Mode=OneWay}"
+				HorizontalOptions="Start" />
+			<Entry
+				Margin="5"
+				Placeholder="http://myserver.com:8000"
+				IsEnabled="{Binding IsEnabled}"
+				Text="{Binding ServerAddress, Mode=OneWayToSource}"/>
+		</VerticalStackLayout>
+		<VerticalStackLayout
+			Grid.Row="2">
 			<Label
 				Padding="5"
 				Margin="5"
@@ -41,7 +54,7 @@
 				CommandParameter="{Binding Email}"/>
 		</VerticalStackLayout>
 		<VerticalStackLayout
-			Grid.Row="2">
+			Grid.Row="3">
 			<Label
 				Padding="5"
 				Margin="5"

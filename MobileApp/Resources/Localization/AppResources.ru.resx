@@ -234,7 +234,13 @@
   <data name="WrnRecipeNameEmpty" xml:space="preserve">
     <value>Наименование рецепта не заполнено.</value>
   </data>
-  <data name="WrnRecipeContentEmpty" xml:space="preserve">
+  <data name="WrnRecipeDirectionsEmpty" xml:space="preserve">
     <value>Инструкции рецепта не заполнены.</value>
+  </data>
+  <data name="ServerAddress" xml:space="preserve">
+    <value>Адрес сервера:</value>
+  </data>
+  <data name="WrnServerAddressEmpty" xml:space="preserve">
+    <value>Адрес сервера не заполнен.</value>
   </data>
 </root>

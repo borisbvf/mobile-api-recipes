@@ -29,22 +29,27 @@ public class RecipeService : IRecipeService
 			return false;
 		}
 	}
-
-	private async Task<RequestResult<string?>> CheckToken()
+	private async Task<RequestResult<(string? serverAddress, string? token)>> CheckToken()
 	{
-		RequestResult<string?> result = new();
+		RequestResult<(string? serverAddress, string? token)> result = new();
 		string? token = await SecureStorage.Default.GetAsync(Constants.TokenKey);
-		if (token == null || !IsValidToken(token))
+		string? serverAddress = await SecureStorage.Default.GetAsync(Constants.ServerAddressKey);
+		if (serverAddress == null)
+		{
+			result.IsSuccess = false;
+			result.ErrorMessage = LocalizationManager.Instance["ErrorAuthTokenInvalid"].ToString();
+		}
+		else if (token == null || !IsValidToken(token))
 		{
 			string? email = await SecureStorage.Default.GetAsync(Constants.EmailKey);
 			string? code = await SecureStorage.Default.GetAsync(Constants.CodeKey);
 			if (email != null && code != null)
 			{
-				RequestResult<string?> authTokenResult = await GetAuthToken(email, code);
+				RequestResult<string?> authTokenResult = await GetAuthToken(serverAddress, email, code);
 				if (authTokenResult.IsSuccess)
 				{
 					result.IsSuccess = true;
-					result.Data = authTokenResult.Data;
+					result.Data = (serverAddress, authTokenResult.Data);
 				}
 				else
 				{
@@ -61,7 +66,7 @@ public class RecipeService : IRecipeService
 		else
 		{
 			result.IsSuccess = true;
-			result.Data = token;
+			result.Data = (serverAddress, token);
 		}
 		return result;
 	}
@@ -69,13 +74,14 @@ public class RecipeService : IRecipeService
 	public async Task<RequestResult<IEnumerable<Recipe>>> GetRecipesAsync()
 	{
 		RequestResult<IEnumerable<Recipe>> result = new();
-		string uri = $"{BaseUrl}/recipes/list";
+		//string uri = $"{BaseUrl}/recipes/list";
 		try
 		{
-			RequestResult<string?> tokenResult = await CheckToken();
+			RequestResult<(string? serverAddress, string? token)> tokenResult = await CheckToken();
 			if (tokenResult.IsSuccess)
 			{
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				string uri = $"{tokenResult.Data.serverAddress}/recipes/list";
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data.token);
 				HttpResponseMessage response = await httpClient.GetAsync(uri);
 				if (response.IsSuccessStatusCode)
 				{
@@ -109,13 +115,14 @@ public class RecipeService : IRecipeService
 	public async Task<RequestResult> AddRecipeAsync(Recipe recipe)
 	{
 		RequestResult result = new();
-		string uri = $"{BaseUrl}/recipes/";
+		//string uri = $"{BaseUrl}/recipes/";
 		try
 		{
-			RequestResult<string?> tokenResult = await CheckToken();
+			RequestResult<(string? serverAddress, string? token)> tokenResult = await CheckToken();
 			if (tokenResult.IsSuccess)
 			{
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				string uri = $"{tokenResult.Data.serverAddress}/recipes/";
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data.token);
 				string data = JsonSerializer.Serialize(recipe);
 				StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 				HttpResponseMessage response = await httpClient.PostAsync(uri, content);
@@ -149,13 +156,14 @@ public class RecipeService : IRecipeService
 	public async Task<RequestResult> UpdateRecipeAsync(Recipe recipe)
 	{
 		RequestResult result = new();
-		string uri = $"{BaseUrl}/recipes/{recipe.Id}";
+		//string uri = $"{BaseUrl}/recipes/{recipe.Id}";
 		try
 		{
-			RequestResult<string?> tokenResult = await CheckToken();
+			RequestResult<(string? serverAddress, string? token)> tokenResult = await CheckToken();
 			if (tokenResult.IsSuccess)
 			{
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				string uri = $"{tokenResult.Data.serverAddress}/recipes/{recipe.Id}";
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data.token);
 				string data = JsonSerializer.Serialize(recipe);
 				StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 				HttpResponseMessage response = await httpClient.PutAsync(uri, content);
@@ -189,13 +197,14 @@ public class RecipeService : IRecipeService
 	public async Task<RequestResult> DeleteRecipeAsync(int recipeId)
 	{
 		RequestResult result = new();
-		string uri = $"{BaseUrl}/recipes/{recipeId}";
+		//string uri = $"{BaseUrl}/recipes/{recipeId}";
 		try
 		{
-			RequestResult<string?> tokenResult = await CheckToken();
+			RequestResult<(string? serverAddress, string? token)> tokenResult = await CheckToken();
 			if (tokenResult.IsSuccess)
 			{
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data);
+				string uri = $"{tokenResult.Data.serverAddress}/recipes/{recipeId}";
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Data.token);
 				HttpResponseMessage response = await httpClient.DeleteAsync(uri);
 				if (response.IsSuccessStatusCode)
 				{
@@ -224,9 +233,9 @@ public class RecipeService : IRecipeService
 		return result;
 	}
 
-	public async Task<RequestResult> SendEmailCode(string email)
+	public async Task<RequestResult> SendEmailCode(string email, string serverAddress)
 	{
-		string uri = $"{BaseUrl}/owners/code_query?email={email}";
+		string uri = $"{serverAddress}/owners/code_query?email={email}";
 		RequestResult result = new();
 		try
 		{
@@ -252,9 +261,9 @@ public class RecipeService : IRecipeService
 		return result;
 	}
 
-	public async Task<RequestResult<string?>> GetAuthToken(string email, string code)
+	public async Task<RequestResult<string?>> GetAuthToken(string serverAddress, string email, string code)
 	{
-		string uri = $"{BaseUrl}/owners/token";
+		string uri = $"{serverAddress}/owners/token";
 		RequestResult<string?> result = new();
 		RecipeToken? token = null;
 		try
@@ -270,6 +279,7 @@ public class RecipeService : IRecipeService
 				token = JsonSerializer.Deserialize<RecipeToken>(content);
 				if (token?.AccessToken != null)
 				{
+					await SecureStorage.Default.SetAsync(Constants.ServerAddressKey, serverAddress);
 					await SecureStorage.Default.SetAsync(Constants.EmailKey, email);
 					await SecureStorage.Default.SetAsync(Constants.CodeKey, code);
 					await SecureStorage.Default.SetAsync(Constants.TokenKey, token?.AccessToken!);

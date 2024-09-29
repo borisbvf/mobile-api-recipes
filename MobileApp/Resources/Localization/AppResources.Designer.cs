@@ -358,6 +358,15 @@ namespace RecipeApp.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Server address:.
+        /// </summary>
+        internal static string ServerAddress {
+            get {
+                return ResourceManager.GetString("ServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
@@ -417,6 +426,15 @@ namespace RecipeApp.Resources.Localization {
         internal static string WrnRecipeNameEmpty {
             get {
                 return ResourceManager.GetString("WrnRecipeNameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server address is empty..
+        /// </summary>
+        internal static string WrnServerAddressEmpty {
+            get {
+                return ResourceManager.GetString("WrnServerAddressEmpty", resourceCulture);
             }
         }
     }

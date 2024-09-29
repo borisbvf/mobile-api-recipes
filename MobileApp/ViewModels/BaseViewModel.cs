@@ -11,7 +11,6 @@ namespace RecipeApp.ViewModels;
 public class BaseViewModel : INotifyPropertyChanged
 {
 	private bool isBusy;
-	private bool isEnabled;
 	private string? title;
 
 	public bool IsBusy

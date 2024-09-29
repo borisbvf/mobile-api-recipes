@@ -11,7 +11,7 @@ public class SettingService : INotifyPropertyChanged
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 	}
 
-	private static SettingService? _instance;
+	private static SettingService? _instance = new SettingService();
 	public static SettingService Instance = _instance ?? new SettingService();
 
 	private SettingService()
